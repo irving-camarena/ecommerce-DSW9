@@ -1,0 +1,68 @@
+
+        <% } else { %>
+          <table class="admin-table">
+            <thead><tr>
+              <th>Orden</th><th>Fecha</th><th>Total</th><th>Estado</th><th></th>
+            </tr></thead>
+            <tbody>
+              <% recentOrders.forEach(order => { %>
+              <tr>
+                <td><strong>#<%= order.id %></strong></td>
+                <td><%= new Date(order.createdAt).toLocaleDateString('es') %></td>
+                <td><strong style="color:var(--accent)">$<%= parseFloat(order.total).toFixed(2) %></strong></td>
+                <td>
+                  <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+                </td>
+                <td><a href="/customer/orders/<%= order.id %>" class="btn btn-outline btn-sm">Ver</a></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Wishlist preview -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h5><i class="bi bi-heart me-2"></i>Mis guardados</h5>
+        <a href="/customer/wishlist" class="btn btn-outline btn-sm">Ver todo</a>
+      </div>
+      <div class="admin-card-body">
+        <% if (!wishlistItems || wishlistItems.length === 0) { %>
+          <p class="text-muted text-center py-3">
+            No tienes productos guardados.
+          </p>
+        <% } else { %>
+          <div class="row g-3">
+            <% wishlistItems.forEach(item => { %>
+            <div class="col-sm-6 col-md-3">
+              <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden">
+                <img src="<%= item.product.imageUrl %>" alt="<%= item.product.name %>"
+                     style="width:100%;height:120px;object-fit:cover"
+                     onerror="this.src='/images/placeholder.jpg'">
+                <div style="padding:10px">
+                  <div class="fw-semibold small"><%= item.product.name %></div>
+                  <div style="color:var(--accent);font-weight:700">
+                    $<%= parseFloat(item.product.price).toFixed(2) %>
+                  </div>
+                  <div class="d-flex gap-2 mt-2">
+                    <a href="/products/<%= item.product.id %>" class="btn btn-primary btn-sm flex-fill">Ver</a>
+                    <form method="POST" action="/customer/wishlist/remove/<%= item.product.id %>">
+                      <button type="submit" class="btn btn-outline btn-sm">
+                        <i class="bi bi-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body></html>
